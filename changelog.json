@@ -13,5 +13,14 @@
     "notes": [
       "Improved Error Handling."
     ]
+  },{
+    "version": "1.0.0",
+    "downloadUrl": "https://github.com/yatryan/craft-plugin-uploader/archive/1.0.0.zip",
+    "date": "2016-03-22T16:37:45-04:00",
+    "notes": [
+      "# Stable Release!",
+      "Added force overwrite option to allow for upgrading plugins already uploaded.",
+      "[Fixed] Styling to match that of Craft Admin."
+    ]
   }
 ]
