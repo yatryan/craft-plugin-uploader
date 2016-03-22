@@ -1,7 +1,7 @@
 
 # Plugin Uploader for Craft CMS
 
-Plugin Uploader for [Craft](http://craftcms.com) makes it much easier to upload plugins for install. No longer do you need to manually extract and upload plugins to your craft/plugins folder.
+Plugin Uploader for [Craft](http://craftcms.com) makes it much easier to upload plugins for install or upgrade. No longer do you need to manually extract and upload plugins to your craft/plugins folder.
 
 ## Installation
 
@@ -12,13 +12,17 @@ Plugin Uploader for [Craft](http://craftcms.com) makes it much easier to upload 
 
 1. Within the Admin control panel, click "Plugin Uploader"
 2. Select the zip file of a plugin you would like to upload and click the "Upload" button.
-3. Install new plugin in Settings → Plugins. You should be redirected here automatically.
+3. Enable overwriting if you are updating a plugin or previously had issues installing a plugin.
+4. Install new plugin in Settings → Plugins. You should be redirected here automatically.
 
 ## TODO
-- [ ] Provide way to upload upgraded plugins
-- [ ] Research ablitiy to automatically install uploaded plugins
+- [ ] Research ability to automatically install uploaded plugins
 
 ## Changelog
+
+### 1.0.0
+- Added Force override function to allow for upgrading existing plugins
+- [Fixed] Styling to match that of Craft Admin
 
 ### 0.2.0
 - Improved Error Messages
