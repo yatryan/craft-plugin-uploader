@@ -1,0 +1,14 @@
+{% extends "_layouts/cp" %}
+
+{% set title = "Plugin Installer"|t %}
+
+{% set content %}
+    <form action="" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="action" value="pluginInstaller/upload/uploadPlugin">
+      <input type="hidden" name="redirect" value="pluginInstaller">
+      <h2>Select Plugin to install</h2>
+      <input type="file" name="fileToUpload" id="fileToUpload">
+      <br><br>
+      <input type="submit" value="Upload Plugin" name="submit">
+  </form>
+{% endset %}
