@@ -3,12 +3,40 @@
 {% set title = "Plugin Uploader"|t %}
 
 {% set content %}
-    <form action="" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="action" value="pluginUploader/upload/uploadPlugin">
-      <input type="hidden" name="redirect" value="settings/plugins">
-      <h2>Select Plugin to Upload</h2>
-      <input type="file" name="fileToUpload" id="fileToUpload">
-      <br><br>
-      <input type="submit" value="Upload Plugin" name="submit">
-  </form>
+
+<form action="" method="post" enctype="multipart/form-data">
+  <input type="hidden" name="action" value="pluginUploader/upload/uploadPlugin">
+  <input type="hidden" name="redirect" value="settings/plugins">
+
+  <div class="field first" id="fileToUpload-field">
+    <div class="heading">
+      <label class="required" for="fileToUpload">Select Plugin to Upload</label>
+    </div>
+    <div class="input ltr">
+  		<input type="file" name="fileToUpload" id="fileToUpload">
+  	</div>
+  </div>
+
+
+
+  <div class="field" id="overwrite-field">
+  	<div class="heading">
+  		<label for="overwrite">Force Overwrite?</label>
+      <div class="instructions"><p>Enable this if you are updating a plugin already uploaded.</p></div>
+    </div>
+    <div class="ltr">
+      <div class="lightswitch off" tabindex="0">
+      	<div class="lightswitch-container">
+      		<div class="label on"></div>
+      		<div class="handle"></div>
+      		<div class="label off"></div>
+      	</div>
+        <input type="hidden" name="overwrite" value="0">
+      </div>
+  	</div>
+  </div>
+  <div class="buttons">
+  	<input type="submit" class="btn submit" value="Upload Plugin" name="submit">
+  </div>
+</form>
 {% endset %}

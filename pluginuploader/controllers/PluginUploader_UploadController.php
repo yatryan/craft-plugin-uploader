@@ -6,7 +6,7 @@ class PluginUploader_UploadController extends BaseController
   public function actionUploadPlugin()
   {
     // $this->requirePostRequest();
-    $success = craft()->pluginUploader->upload($_FILES["fileToUpload"]);
+    $success = craft()->pluginUploader->upload($_FILES["fileToUpload"], (bool)$_POST["overwrite"]);
 
     if ($success) {
       $this->redirectToPostedUrl();

@@ -10,7 +10,7 @@ class PluginUploaderPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '0.2.0';
+        return '1.0.0';
     }
 
     public function getDeveloper()
