@@ -15,10 +15,13 @@ Plugin Uploader for [Craft](http://craftcms.com) makes it much easier to upload 
 3. Install new plugin in Settings → Plugins. You should be redirected here automatically.
 
 ## TODO
-- [ ] Provide more error messaging when uploads fail
+- [ ] Provide way to upload upgraded plugins
 - [ ] Research ablitiy to automatically install uploaded plugins
 
 ## Changelog
+
+### 0.2.0
+- Improved Error Messages
 
 ### 0.1.0
 - Initial Release
