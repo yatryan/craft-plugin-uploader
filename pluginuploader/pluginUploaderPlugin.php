@@ -10,7 +10,7 @@ class PluginUploaderPlugin extends BasePlugin
 
     public function getVersion()
     {
-        return '0.1';
+        return '0.1.0';
     }
 
     public function getDeveloper()
@@ -25,18 +25,18 @@ class PluginUploaderPlugin extends BasePlugin
 
     public function getPluginUrl()
     {
-        return 'http://yatryan.com/';
+        return 'https://github.com/yatryan/craft-plugin-uploader/';
     }
 
     public function getDocumentationUrl()
     {
-        return 'http://yatryan.com/blob/master/README.md';
+        return 'https://github.com/yatryan/craft-plugin-uploader/blob/master/README.md';
     }
 
-    // public function getReleaseFeedUrl()
-    // {
-    //     return 'http://yatryan.dev/';
-    // }
+    public function getReleaseFeedUrl()
+    {
+        return 'https://raw.githubusercontent.com/yatryan/craft-plugin-uploader/master/changelog.json';
+    }
 
     public function getSourceLanguage()
     {
