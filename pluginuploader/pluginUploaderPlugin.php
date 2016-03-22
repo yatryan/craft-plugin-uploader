@@ -1,11 +1,11 @@
 <?php
 namespace Craft;
 
-class PluginInstallerPlugin extends BasePlugin
+class PluginUploaderPlugin extends BasePlugin
 {
     public function getName()
     {
-         return Craft::t('Plugin Installer');
+         return Craft::t('Plugin Uploader');
     }
 
     public function getVersion()
@@ -50,22 +50,8 @@ class PluginInstallerPlugin extends BasePlugin
 
     public function onBeforeInstall()
     {
-      if (!file_exists("../craft/storage/uploads/plugininstaller")) {
-        mkdir("../craft/storage/uploads/plugininstaller", 0777, true);
+      if (!file_exists("../craft/storage/uploads/pluginuploader")) {
+        mkdir("../craft/storage/uploads/pluginuploader", 0777, true);
       }
-    }
-
-    public function getSettingsHtml()
-    {
-        return craft()->templates->render('plugininstaller/_settings', array(
-          'settings' => $this->getSettings()
-        ));
-    }
-
-    protected function defineSettings()
-    {
-        return array(
-            'cocktailCategories' => array(AttributeType::Mixed, 'default' => array('Sours', 'Fizzes', 'Juleps')),
-        );
     }
 }
