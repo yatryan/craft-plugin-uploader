@@ -1,10 +1,17 @@
 [
-    {
-        "version": "0.1.0",
-        "downloadUrl": "https://github.com/yatryan/craft-plugin-uploader/archive/0.1.0.zip",
-        "date": "2016-03-22T15:11:07-04:00",
-        "notes": [
-            "Initial Release"
-        ]
-    }
+  {
+    "version": "0.1.0",
+    "downloadUrl": "https://github.com/yatryan/craft-plugin-uploader/archive/0.1.0.zip",
+    "date": "2016-03-22T15:11:07-04:00",
+    "notes": [
+      "Initial Release"
+    ]
+  },{
+    "version": "0.2.0",
+    "downloadUrl": "https://github.com/yatryan/craft-plugin-uploader/archive/0.2.0.zip",
+    "date": "2016-03-22T15:38:00-04:00",
+    "notes": [
+      "Improved Error Handling."
+    ]
+  }
 ]
