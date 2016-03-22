@@ -6,7 +6,7 @@ const UPLOAD_FOLDER = "../craft/storage/uploads/pluginuploader/";
 
 class PluginUploaderService extends BaseApplicationComponent
 {
-    public function upload($file)
+    public function upload($file, $overwrite = false)
     {
       $target_file = UPLOAD_FOLDER . basename($file["name"]);
       $fileType = pathinfo($target_file,PATHINFO_EXTENSION);
@@ -27,7 +27,7 @@ class PluginUploaderService extends BaseApplicationComponent
       }
       // Check if $uploadOk is set to 0 by an error
       if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        $this->extract($target_file);
+        $this->extract($target_file, $overwrite);
       } else {
         craft()->userSession->setNotice(Craft::t('Sorry, there was an error uploading your file.'));
         return false;
@@ -36,7 +36,7 @@ class PluginUploaderService extends BaseApplicationComponent
       unlink($target_file);
     }
 
-    public function extract($file)
+    public function extract($file, $overwrite = false)
     {
       $date = new DateTime();
       $now = $date->getTimestamp();
@@ -46,11 +46,11 @@ class PluginUploaderService extends BaseApplicationComponent
         $zip->extractTo(UPLOAD_FOLDER);
         $zip->close();
 
-        $this->move(pathinfo($file,PATHINFO_FILENAME));
+        $this->move(pathinfo($file,PATHINFO_FILENAME), $overwrite);
       }
     }
 
-    public function move($folder)
+    public function move($folder, $overwrite = false)
     {
       $zipFolder = UPLOAD_FOLDER.$folder;
       $pluginExtractFile = '';
@@ -84,7 +84,7 @@ class PluginUploaderService extends BaseApplicationComponent
 
         // Copy to craft/plugins folder.
         $pluginInstallFolder = CRAFT_PLUGIN_FOLDER . '/' . strtolower($pluginName);
-        if (!file_exists($pluginInstallFolder)) {
+        if ($overwrite || !file_exists($pluginInstallFolder)) {
           // Copy folder to craft/plugins
           $this->recurse_copy($pluginExtractFolder, $pluginInstallFolder);
           // Remove zipped folder
