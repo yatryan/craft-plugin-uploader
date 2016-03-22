@@ -9,33 +9,31 @@ class PluginUploaderService extends BaseApplicationComponent
     public function upload($file)
     {
       $target_file = UPLOAD_FOLDER . basename($file["name"]);
-      $uploadOk = 1;
       $fileType = pathinfo($target_file,PATHINFO_EXTENSION);
       // Check if file already exists
       if (file_exists($target_file)) {
           craft()->userSession->setNotice(Craft::t('Sorry, file already exists.'));
-          $uploadOk = 0;
+          return false;
       }
       // Check file size
       if ($file["size"] > 500000) {
           craft()->userSession->setNotice(Craft::t('Sorry, your file is too large.'));
-          $uploadOk = 0;
+          return false;
       }
       // Allow certain file formats
       if($fileType != "zip") {
           craft()->userSession->setNotice(Craft::t('Sorry, only ZIP files are allowed.'));
-          $uploadOk = 0;
+          return false;
       }
       // Check if $uploadOk is set to 0 by an error
-      if ($uploadOk == 1) {
-          if (move_uploaded_file($file["tmp_name"], $target_file)) {
-            $this->extract($target_file);
-          } else {
-            craft()->userSession->setNotice(Craft::t('Sorry, there was an error uploading your file.'));
-          }
-
-          unlink($target_file);
+      if (move_uploaded_file($file["tmp_name"], $target_file)) {
+        $this->extract($target_file);
+      } else {
+        craft()->userSession->setNotice(Craft::t('Sorry, there was an error uploading your file.'));
+        return false;
       }
+
+      unlink($target_file);
     }
 
     public function extract($file)
@@ -57,6 +55,7 @@ class PluginUploaderService extends BaseApplicationComponent
       $zipFolder = UPLOAD_FOLDER.$folder;
       $pluginExtractFile = '';
       $pluginExtractFolder = '';
+      // Find the folder that the Plugin.php file is in. That is the root of the plugin.
       foreach (glob($zipFolder."/*Plugin.php") as $filename) {
         $pluginExtractFile = $filename;
         $pluginExtractFolder = dirname($filename);
@@ -70,35 +69,42 @@ class PluginUploaderService extends BaseApplicationComponent
 
       // Open the file
       $fp = @fopen($pluginExtractFile, 'r');
-      // Add each line to an array
-      if (!$fp) {
-        craft()->userSession->setNotice(Craft::t("The uploaded file is not a valid plugin."));
-         die();
-      }
+      if ($fp) {
+        $array = explode("\n", fread($fp, filesize($pluginExtractFile)));
 
-      $array = explode("\n", fread($fp, filesize($pluginExtractFile)));
-
-      $pluginName = '';
-      foreach ($array as $line) {
-        if (strpos($line, 'class') !== false && strpos($line, 'extends') !== false) {
-          $split = explode(" ", $line);
-          $pluginName = substr($split[1], 0, -6);
-          break;
+        $pluginName = '';
+        // Get name of plugin
+        foreach ($array as $line) {
+          if (strpos($line, 'class') !== false && strpos($line, 'extends') !== false) {
+            $split = explode(" ", $line);
+            $pluginName = substr($split[1], 0, -6);
+            break;
+          }
         }
-      }
 
-      if (!file_exists(CRAFT_PLUGIN_FOLDER . '/' . strtolower($pluginName))) {
-        // Copy folder to craft/plugins
-        $this->recurse_copy($pluginExtractFolder, CRAFT_PLUGIN_FOLDER . '/' . strtolower($pluginName));
-        // Remove zipped folder
-        $this->rrmdir($zipFolder);
+        // Copy to craft/plugins folder.
+        $pluginInstallFolder = CRAFT_PLUGIN_FOLDER . '/' . strtolower($pluginName);
+        if (!file_exists($pluginInstallFolder)) {
+          // Copy folder to craft/plugins
+          $this->recurse_copy($pluginExtractFolder, $pluginInstallFolder);
+          // Remove zipped folder
+          $this->rrmdir($zipFolder);
 
-        craft()->userSession->setNotice(Craft::t("The plugin ". $pluginName . " has been uploaded."));
+          craft()->userSession->setNotice(Craft::t("The plugin ". $pluginName . " has been uploaded."));
+        }
+        else {
+          craft()->userSession->setNotice(Craft::t("A plugin with the same name (". $pluginName . ") is already uploaded."));
+          return false;
+        }
+
+        return true;
+      } else {
+        craft()->userSession->setNotice(Craft::t("The uploaded file is not a valid plugin."));
+        return false;
       }
     }
 
     function rrmdir($dir) {
-      // glob($path . '{,.}[!.,!..]*',GLOB_MARK|GLOB_BRACE)
       foreach(glob($dir . '/{,.}[!.,!..]*',GLOB_MARK|GLOB_BRACE) as $file) {
         if(is_dir($file)) {
           $this->rrmdir($file);
