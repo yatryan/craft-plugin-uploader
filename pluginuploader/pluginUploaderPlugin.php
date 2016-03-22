@@ -8,6 +8,11 @@ class PluginUploaderPlugin extends BasePlugin
          return Craft::t('Plugin Uploader');
     }
 
+    public function getDescription()
+    {
+         return 'Easily upload new and upgraded plugins.';
+    }
+
     public function getVersion()
     {
         return '1.0.0';
