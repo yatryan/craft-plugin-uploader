@@ -6,10 +6,13 @@ class PluginUploader_UploadController extends BaseController
   public function actionUploadPlugin()
   {
     // $this->requirePostRequest();
-    $success = craft()->pluginUploader->upload($_FILES["fileToUpload"], (bool)$_POST["overwrite"]);
+    $error = craft()->pluginUploader->upload($_FILES["fileToUpload"], (bool)$_POST["overwrite"]);
 
-    if ($success) {
+    if ($error) {
+      craft()->userSession->setNotice(Craft::t($error));
+    } else {
       $this->redirectToPostedUrl();
+      craft()->userSession->setNotice(Craft::t("The plugin has been uploaded."));
     }
   }
 }

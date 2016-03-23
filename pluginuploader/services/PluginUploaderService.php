@@ -10,30 +10,30 @@ class PluginUploaderService extends BaseApplicationComponent
     {
       $target_file = UPLOAD_FOLDER . basename($file["name"]);
       $fileType = pathinfo($target_file,PATHINFO_EXTENSION);
+      $error = false;
+
       // Check if file already exists
       if (file_exists($target_file)) {
-          craft()->userSession->setNotice(Craft::t('Sorry, file already exists.'));
-          return false;
+          $error = 'Sorry, file already exists.';
       }
       // Check file size
-      if ($file["size"] > 500000) {
-          craft()->userSession->setNotice(Craft::t('Sorry, your file is too large.'));
-          return false;
+      if (!$error && $file["size"] > 500000) {
+          $error = 'Sorry, your file is too large.';
       }
       // Allow certain file formats
-      if($fileType != "zip") {
-          craft()->userSession->setNotice(Craft::t('Sorry, only ZIP files are allowed.'));
-          return false;
+      if(!$error && $fileType != "zip") {
+          $error = 'Sorry, only ZIP files are allowed.';
       }
       // Check if $uploadOk is set to 0 by an error
-      if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        $this->extract($target_file, $overwrite);
+      if (!$error && move_uploaded_file($file["tmp_name"], $target_file)) {
+        $error = $this->extract($target_file, $overwrite);
       } else {
-        craft()->userSession->setNotice(Craft::t('Sorry, there was an error uploading your file.'));
-        return false;
+        $error = 'Sorry, there was an error uploading your file.';
       }
 
       unlink($target_file);
+
+      return $error;
     }
 
     public function extract($file, $overwrite = false)
@@ -46,8 +46,10 @@ class PluginUploaderService extends BaseApplicationComponent
         $zip->extractTo(UPLOAD_FOLDER);
         $zip->close();
 
-        $this->move(pathinfo($file,PATHINFO_FILENAME), $overwrite);
+        return $this->move(pathinfo($file,PATHINFO_FILENAME), $overwrite);
       }
+
+      return 'Unknown Error';
     }
 
     public function move($folder, $overwrite = false)
@@ -89,18 +91,14 @@ class PluginUploaderService extends BaseApplicationComponent
           $this->recurse_copy($pluginExtractFolder, $pluginInstallFolder);
           // Remove zipped folder
           $this->rrmdir($zipFolder);
-
-          craft()->userSession->setNotice(Craft::t("The plugin ". $pluginName . " has been uploaded."));
         }
         else {
-          craft()->userSession->setNotice(Craft::t("A plugin with the same name (". $pluginName . ") is already uploaded."));
-          return false;
+          return "A plugin with the same name (". $pluginName . ") is already uploaded.";
         }
 
-        return true;
-      } else {
-        craft()->userSession->setNotice(Craft::t("The uploaded file is not a valid plugin."));
         return false;
+      } else {
+        return "The uploaded file is not a valid plugin.";
       }
     }
 
