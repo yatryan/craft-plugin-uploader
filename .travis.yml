@@ -31,3 +31,5 @@ script: phpunit --configuration craft/plugins/phpunit.xml.dist --coverage-clover
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
