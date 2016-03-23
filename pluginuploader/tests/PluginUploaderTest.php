@@ -30,15 +30,13 @@ class PluginUploaderTest extends BaseTest
 
     chdir('craft');
 
-    // Create test file
-    // @touch(__DIR__.'/test.zip');
+    if (!file_exists("../craft/storage/uploads/pluginuploader")) {
+      mkdir("../craft/storage/uploads/pluginuploader", 0777, true);
+    }
   }
 
   public static function tearDownAfterClass()
   {
-    // Remove test file
-    // @unlink(__DIR__.'/test.zip');
-
     // Tear down parent
     parent::tearDownAfterClass();
     chdir('../');
