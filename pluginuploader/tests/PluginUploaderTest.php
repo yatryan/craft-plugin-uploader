@@ -134,19 +134,19 @@ class PluginUploaderTest extends BaseTest
    *
    * @covers ::extract
    */
-  public function testExtractSuccess()
-  {
-    $file = '../craft/plugins/pluginuploader/tests/zipSubFolder.zip';
-
-    $service = $this->setMockPluginUploaderServiceMove();
-
-    //check if it updates the correct record
-    $service->expects($this->once())
-      ->method('move')
-      ->with($this->anything());
-
-    $result = $service->extract($file);
-  }
+  // public function testExtractSuccess()
+  // {
+  //   $file = '../craft/plugins/pluginuploader/tests/zipSubFolder.zip';
+  //
+  //   $service = $this->setMockPluginUploaderServiceMove();
+  //
+  //   //check if it updates the correct record
+  //   $service->expects($this->once())
+  //     ->method('move')
+  //     ->with($this->anything());
+  //
+  //   $result = $service->extract($file);
+  // }
 
   /**
    * Mock PluginUploaderService->Extract
