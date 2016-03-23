@@ -19,13 +19,13 @@ before_script:
   - echo "<?php return array('user' => 'test');" > craft/config/db.php
   - mkdir craft/storage
   - mkdir -p craft/plugins/pluginuploader
-  - for item in *; do if [[ ! "$item" == "craft" ]]; then mv $item craft/plugins/pluginuploader; fi; done
+  - for item in *; do if [[ ! "$item" == "craft" ]]; then mv $item craft/plugins; fi; done
   - cd craft/app
   - composer require mockery/mockery
   - cd ../..
 
 # execute tests
-script: phpunit --bootstrap craft/app/tests/bootstrap.php --configuration craft/plugins/pluginuploader/phpunit.xml.dist --coverage-clover coverage.clover craft/plugins/pluginuploader/tests
+script: phpunit --bootstrap craft/app/tests/bootstrap.php --configuration craft/plugins/phpunit.xml.dist --coverage-clover coverage.clover craft/plugins/pluginuploader/tests
 
 # upload coverage to scrutinizer
 after_script:

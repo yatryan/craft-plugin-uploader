@@ -28,7 +28,7 @@ class PluginUploaderTest extends BaseTest
     // Require dependencies
     require_once __DIR__.'/../services/PluginUploaderService.php';
 
-    chdir('public');
+    chdir('craft');
 
     // Create test file
     // @touch(__DIR__.'/test.zip');
@@ -41,6 +41,7 @@ class PluginUploaderTest extends BaseTest
 
     // Tear down parent
     parent::tearDownAfterClass();
+    chdir('../');
   }
 
   /**
