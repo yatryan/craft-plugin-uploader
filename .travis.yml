@@ -30,4 +30,4 @@ script: phpunit --configuration craft/plugins/phpunit.xml.dist --coverage-clover
 # upload coverage to scrutinizer
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover craft/coverage.clover
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
