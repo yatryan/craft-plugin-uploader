@@ -151,7 +151,7 @@ class PluginUploaderTest extends BaseTest
   /**
    * Mock PluginUploaderService->Extract
    */
-  private function setMockPluginUploaderServiceExtract($output='success')
+  private function setMockPluginUploaderServiceExtract($output = 'success')
   {
     $mock = $this->getMockBuilder('Craft\PluginUploaderService')
       ->setMethods(array('extract', 'move_uploaded_file'))
@@ -166,7 +166,7 @@ class PluginUploaderTest extends BaseTest
   /**
    * Mock PluginUploaderService->Move
    */
-  private function setMockPluginUploaderServiceMove($output='success')
+  private function setMockPluginUploaderServiceMove($output = 'success')
   {
     $mock = $this->getMockBuilder('Craft\PluginUploaderService')
       ->setMethods(array('move'))
