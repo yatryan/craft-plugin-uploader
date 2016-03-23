@@ -130,6 +130,25 @@ class PluginUploaderTest extends BaseTest
   }
 
   /**
+   * Test Extract Success.
+   *
+   * @covers ::extract
+   */
+  public function testExtractSuccess()
+  {
+    $file = '../craft/plugins/pluginuploader/test/zipSubFolder.zip';
+
+    $service = $this->setMockPluginUploaderServiceMove();
+
+    //check if it updates the correct record
+    $service->expects($this->once())
+      ->method('move')
+      ->with($this->anything());
+
+    $result = $service->extract($file);
+  }
+
+  /**
    * Mock PluginUploaderService->Extract
    */
   private function setMockPluginUploaderServiceExtract($output='success')
@@ -140,6 +159,19 @@ class PluginUploaderTest extends BaseTest
     $mock->method('extract')
       ->willReturn($output);
     $mock->method('move_uploaded_file')
+      ->willReturn($output);
+    return $mock;
+  }
+
+  /**
+   * Mock PluginUploaderService->Move
+   */
+  private function setMockPluginUploaderServiceMove($output='success')
+  {
+    $mock = $this->getMockBuilder('Craft\PluginUploaderService')
+      ->setMethods(array('move'))
+      ->getMock();
+    $mock->method('move')
       ->willReturn($output);
     return $mock;
   }
