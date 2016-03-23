@@ -25,7 +25,7 @@ before_script:
   - cd ../..
 
 # execute tests
-script: phpunit --bootstrap craft/app/tests/bootstrap.php --configuration craft/plugins/phpunit.xml.dist --coverage-clover coverage.clover craft/plugins/pluginuploader/tests
+script: phpunit --configuration craft/plugins/phpunit.xml.dist --coverage-clover coverage.clover craft/plugins/pluginuploader/tests
 
 # upload coverage to scrutinizer
 after_script:
