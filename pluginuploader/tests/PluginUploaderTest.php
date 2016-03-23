@@ -136,7 +136,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testExtractSuccess()
   {
-    $file = '../craft/plugins/pluginuploader/test/zipSubFolder.zip';
+    $file = '../craft/plugins/pluginuploader/tests/zipSubFolder.zip';
 
     $service = $this->setMockPluginUploaderServiceMove();
 

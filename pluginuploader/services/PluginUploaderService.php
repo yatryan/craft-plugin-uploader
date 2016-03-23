@@ -106,7 +106,7 @@ class PluginUploaderService extends BaseApplicationComponent
       }
     }
 
-    function rrmdir($dir) {
+    private function rrmdir($dir) {
       foreach(glob($dir . '/{,.}[!.,!..]*',GLOB_MARK|GLOB_BRACE) as $file) {
         if(is_dir($file)) {
           $this->rrmdir($file);
@@ -117,7 +117,7 @@ class PluginUploaderService extends BaseApplicationComponent
       rmdir($dir);
     }
 
-    function recurse_copy($src,$dst)
+    private function recurse_copy($src,$dst)
     {
       $dir = opendir($src);
       @mkdir($dst);
