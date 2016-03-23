@@ -25,13 +25,17 @@ class PluginUploaderService extends BaseApplicationComponent
           $error = 'Sorry, only ZIP files are allowed.';
       }
       // Check if $uploadOk is set to 0 by an error
-      if (!$error && move_uploaded_file($file["tmp_name"], $target_file)) {
-        $error = $this->extract($target_file, $overwrite);
-      } else {
-        $error = 'Sorry, there was an error uploading your file.';
+      if (!$error) {
+        if ($this->move_uploaded_file($file["tmp_name"], $target_file)) {
+          $error = $this->extract($target_file, $overwrite);
+        } else {
+          $error = 'Sorry, there was an error uploading your file.';
+        }
       }
 
-      unlink($target_file);
+      if (file_exists($target_file)) {
+        unlink($target_file);
+      }
 
       return $error;
     }
@@ -128,5 +132,9 @@ class PluginUploaderService extends BaseApplicationComponent
           }
       }
       closedir($dir);
-  }
+    }
+
+    protected function move_uploaded_file($from, $to) {
+        return move_uploaded_file($from, $to);
+    }
 }
