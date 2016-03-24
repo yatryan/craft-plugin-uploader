@@ -83,9 +83,9 @@ class PluginUploaderTest extends BaseTest
     $service = $this->setMockPluginUploaderServiceExtract();
 
     // Create test file
-    @touch('../craft/storage/uploads/pluginuploader/zipSubfolder.zip');
+    @touch(__DIR__.'/../../../storage/uploads/pluginuploader/zipSubfolder.zip');
     $result = $service->upload($file);
-    @unlink('../craft/storage/uploads/pluginuploader/zipSubfolder.zip');
+    @unlink(__DIR__.'/../../../craft/storage/uploads/pluginuploader/zipSubfolder.zip');
 
     // check we got the correct result
     $this->assertEquals('Sorry, file already exists.', $result);
