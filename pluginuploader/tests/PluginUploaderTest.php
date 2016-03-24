@@ -59,7 +59,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testUploadSuccess()
   {
-    $file = array("name"=>"zipSubFolder.zip", "size"=>500, "tmp_name"=>"./zipSubFolder.zip");
+    $file = array("name"=>"zipSubfolder.zip", "size"=>500, "tmp_name"=>"./zipSubfolder.zip");
 
     $service = $this->setMockPluginUploaderServiceExtract();
 
@@ -78,14 +78,14 @@ class PluginUploaderTest extends BaseTest
    */
   public function testUploadFail_FileExists()
   {
-    $file = array("name"=>"zipSubFolder.zip", "size"=>500, "tmp_name"=>"./zipSubFolder.zip");
+    $file = array("name"=>"zipSubfolder.zip", "size"=>500, "tmp_name"=>"./zipSubfolder.zip");
 
     $service = $this->setMockPluginUploaderServiceExtract();
 
     // Create test file
-    @touch('../craft/storage/uploads/pluginuploader/zipSubFolder.zip');
+    @touch('../craft/storage/uploads/pluginuploader/zipSubfolder.zip');
     $result = $service->upload($file);
-    @unlink('../craft/storage/uploads/pluginuploader/zipSubFolder.zip');
+    @unlink('../craft/storage/uploads/pluginuploader/zipSubfolder.zip');
 
     // check we got the correct result
     $this->assertEquals('Sorry, file already exists.', $result);
@@ -98,7 +98,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testUploadFail_FileSize()
   {
-    $file = array("name"=>"zipSubFolder.zip", "size"=>5000000, "tmp_name"=>"./zipSubFolder.zip");
+    $file = array("name"=>"zipSubfolder.zip", "size"=>5000000, "tmp_name"=>"./zipSubfolder.zip");
 
     $service = $this->setMockPluginUploaderServiceExtract();
     $result = $service->upload($file);
@@ -114,7 +114,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testUploadFail_FileFormat()
   {
-    $file = array("name"=>"zipSubFolder.png", "size"=>500, "tmp_name"=>"./zipSubFolder.png");
+    $file = array("name"=>"zipSubfolder.png", "size"=>500, "tmp_name"=>"./zipSubfolder.png");
 
     $service = $this->setMockPluginUploaderServiceExtract();
     $result = $service->upload($file);
@@ -130,7 +130,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testUploadFail_Unknown()
   {
-    $file = array("name"=>"zipSubFolder.zip", "size"=>500, "tmp_name"=>"./zipSubFolder.zip");
+    $file = array("name"=>"zipSubfolder.zip", "size"=>500, "tmp_name"=>"./zipSubfolder.zip");
 
     $service = $this->setMockPluginUploaderServiceExtract(false);
     $result = $service->upload($file);
@@ -150,7 +150,7 @@ class PluginUploaderTest extends BaseTest
       $this->markTestSkipped('The Zip extension is not available.');
     }
 
-    $file = '../craft/plugins/pluginuploader/tests/zipSubFolder.zip';
+    $file = '../craft/plugins/pluginuploader/tests/zipSubfolder.zip';
 
     $service = $this->setMockPluginUploaderServiceMove();
 
@@ -167,9 +167,9 @@ class PluginUploaderTest extends BaseTest
    *
    * @covers ::move
    */
-  public function testMoveSuccess_ZipSubFolder()
+  public function testMoveSuccess_zipSubfolder()
   {
-    $file = array("name"=>"zipSubFolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipSubFolder.zip');
+    $file = array("name"=>"zipSubfolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipSubfolder.zip');
 
     $service = $this->setMockPluginUploaderServiceMoveUploadedFile();
 
@@ -186,7 +186,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testMoveSuccess_ZipNoSubFolder()
   {
-    $file = array("name"=>"zipNoSubFolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipNoSubFolder.zip');
+    $file = array("name"=>"zipNoSubfolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipNoSubfolder.zip');
 
     $service = $this->setMockPluginUploaderServiceMoveUploadedFile();
 
