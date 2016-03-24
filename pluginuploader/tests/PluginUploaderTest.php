@@ -184,7 +184,7 @@ class PluginUploaderTest extends BaseTest
    *
    * @covers ::move
    */
-  public function testMoveSuccess_ZipNoSubFolder()
+  public function testMoveSuccess_ZipNoSubfolder()
   {
     $file = array("name"=>"zipNoSubfolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipNoSubfolder.zip');
 
@@ -203,7 +203,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testMoveFail_PluginExists()
   {
-    $file = array("name"=>"zipNoSubFolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipNoSubFolder.zip');
+    $file = array("name"=>"zipNoSubfolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipNoSubfolder.zip');
 
     $service = $this->setMockPluginUploaderServiceMoveUploadedFile();
 
