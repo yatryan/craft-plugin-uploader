@@ -27,19 +27,29 @@ class PluginUploaderTest extends BaseTest
 
     // Require dependencies
     require_once __DIR__.'/../services/PluginUploaderService.php';
-
-    chdir('craft');
-
-    if (!file_exists("../craft/storage/uploads/pluginuploader")) {
-      mkdir("../craft/storage/uploads/pluginuploader", 0777, true);
-    }
   }
 
   public static function tearDownAfterClass()
   {
     // Tear down parent
     parent::tearDownAfterClass();
-    chdir('../');
+  }
+
+  public function setUp()
+  {
+    if (!file_exists(__DIR__."/../../../storage/uploads/pluginuploader")) {
+      mkdir(__DIR__."/../../../storage/uploads/pluginuploader", 0777, true);
+    }
+  }
+
+  public function tearDown()
+  {
+    if (file_exists(__DIR__."/../../../storage/uploads")) {
+      self::rrmdir(__DIR__."/../../../storage/uploads");
+    }
+    if (file_exists(__DIR__."/../../../plugins/testplugin")) {
+      self::rrmdir(__DIR__."/../../../plugins/testplugin");
+    }
   }
 
   /**
@@ -134,19 +144,77 @@ class PluginUploaderTest extends BaseTest
    *
    * @covers ::extract
    */
-  // public function testExtractSuccess()
-  // {
-  //   $file = '../craft/plugins/pluginuploader/tests/zipSubFolder.zip';
-  //
-  //   $service = $this->setMockPluginUploaderServiceMove();
-  //
-  //   //check if it updates the correct record
-  //   $service->expects($this->once())
-  //     ->method('move')
-  //     ->with($this->anything());
-  //
-  //   $result = $service->extract($file);
-  // }
+  public function testExtractSuccess()
+  {
+    if (!extension_loaded('zip')) {
+      $this->markTestSkipped('The Zip extension is not available.');
+    }
+
+    $file = '../craft/plugins/pluginuploader/tests/zipSubFolder.zip';
+
+    $service = $this->setMockPluginUploaderServiceMove();
+
+    //check if it updates the correct record
+    $service->expects($this->once())
+      ->method('move')
+      ->with($this->anything());
+
+    $result = $service->extract($file);
+  }
+
+  /**
+   * Test Move Success - zip with subfolder
+   *
+   * @covers ::move
+   */
+  public function testMoveSuccess_ZipSubFolder()
+  {
+    $file = array("name"=>"zipSubFolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipSubFolder.zip');
+
+    $service = $this->setMockPluginUploaderServiceMoveUploadedFile();
+
+    $result = $service->upload($file);
+
+    // check we got the correct result
+    $this->assertEquals(false, $result);
+  }
+
+  /**
+   * Test Move Success - zip without subfolder
+   *
+   * @covers ::move
+   */
+  public function testMoveSuccess_ZipNoSubFolder()
+  {
+    $file = array("name"=>"zipNoSubFolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipNoSubFolder.zip');
+
+    $service = $this->setMockPluginUploaderServiceMoveUploadedFile();
+
+    $result = $service->upload($file);
+
+    // check we got the correct result
+    $this->assertEquals(false, $result);
+  }
+
+  /**
+   * Test Move Fail - plugin exists
+   *
+   * @covers ::move
+   */
+  public function testMoveFail_PluginExists()
+  {
+    $file = array("name"=>"zipNoSubFolder.zip", "size"=>500, "tmp_name"=>__DIR__.'/zipNoSubFolder.zip');
+
+    $service = $this->setMockPluginUploaderServiceMoveUploadedFile();
+
+    $result = $service->upload($file);
+    // check we got the correct result first time around
+    $this->assertEquals(false, $result);
+
+    $result = $service->upload($file);
+    // check we got the correct result second time around
+    $this->assertEquals('A plugin with the same name (TestPlugin) is already uploaded.', $result);
+  }
 
   /**
    * Mock PluginUploaderService->Extract
@@ -174,5 +242,32 @@ class PluginUploaderTest extends BaseTest
     $mock->method('move')
       ->willReturn($output);
     return $mock;
+  }
+
+  /**
+   * Mock PluginUploaderService->MoveUploadedFile
+   */
+  private function setMockPluginUploaderServiceMoveUploadedFile()
+  {
+    $mock = $this->getMockBuilder('Craft\PluginUploaderService')
+      ->setMethods(array('move_uploaded_file'))
+      ->getMock();
+    $mock->method('move_uploaded_file')
+      ->will($this->returnCallback('copy'));
+    return $mock;
+  }
+
+  /**
+   * Remove Directory
+   */
+  private function rrmdir($dir) {
+    foreach (glob($dir.'/{,.}[!.,!..]*', GLOB_MARK|GLOB_BRACE) as $file) {
+      if (is_dir($file)) {
+        self::rrmdir($file);
+      } else {
+        unlink($file);
+      }
+    }
+    rmdir($dir);
   }
 }

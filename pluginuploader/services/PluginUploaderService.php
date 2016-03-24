@@ -1,14 +1,15 @@
 <?php
 namespace Craft;
 
-const CRAFT_PLUGIN_FOLDER = '../craft/plugins';
-const UPLOAD_FOLDER = "../craft/storage/uploads/pluginuploader/";
+const CRAFT_FOLDER = __DIR__.'/../../..';
+const CRAFT_PLUGIN_FOLDER = CRAFT_FOLDER.'/plugins';
+const UPLOAD_FOLDER = CRAFT_FOLDER."/storage/uploads/pluginuploader";
 
 class PluginUploaderService extends BaseApplicationComponent
 {
     public function upload($file, $overwrite = false)
     {
-      $target_file = UPLOAD_FOLDER.basename($file["name"]);
+      $target_file = UPLOAD_FOLDER.'/'.basename($file["name"]);
       $fileType = pathinfo($target_file, PATHINFO_EXTENSION);
       $error = false;
 
@@ -61,7 +62,7 @@ class PluginUploaderService extends BaseApplicationComponent
 
     public function move($folder, $overwrite = false)
     {
-      $zipFolder = UPLOAD_FOLDER.$folder;
+      $zipFolder = UPLOAD_FOLDER.'/'.$folder;
       $pluginExtractFile = '';
       $pluginExtractFolder = '';
       // Find the folder that the Plugin.php file is in. That is the root of the plugin.

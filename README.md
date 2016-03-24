@@ -2,7 +2,7 @@
 
 # Plugin Uploader for Craft CMS
 
-[![Build Status](https://travis-ci.org/yatryan/craft-plugin-uploader.png?branch=develop)](https://travis-ci.org/yatryan/craft-plugin-uploader)[![codecov.io](https://codecov.io/github/yatryan/craft-plugin-uploader/coverage.svg?branch=develop)](https://codecov.io/github/yatryan/craft-plugin-uploader?branch=develop)
+[![Build Status](https://img.shields.io/travis/yatryan/craft-plugin-uploader/develop.svg)](https://travis-ci.org/yatryan/craft-plugin-uploader)  [![codecov.io](https://img.shields.io/codecov/c/github/yatryan/craft-plugin-uploader/develop.svg)](https://codecov.io/github/yatryan/craft-plugin-uploader?branch=develop)
 
 
 Plugin Uploader for [Craft](http://craftcms.com) makes it much easier to upload plugins for install or upgrade. No longer do you need to manually extract and upload plugins to your craft/plugins folder.
