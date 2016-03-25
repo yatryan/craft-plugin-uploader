@@ -1,41 +1,49 @@
 <?php
 namespace Craft;
 
-const CRAFT_PLUGIN_FOLDER = '../craft/plugins';
-const UPLOAD_FOLDER = "../craft/storage/uploads/pluginuploader/";
+const CRAFT_FOLDER = __DIR__.'/../../..';
+const CRAFT_PLUGIN_FOLDER = CRAFT_FOLDER.'/plugins';
+const UPLOAD_FOLDER = CRAFT_FOLDER."/storage/uploads/pluginuploader";
 
 class PluginUploaderService extends BaseApplicationComponent
 {
     public function upload($file, $overwrite = false)
     {
-      $target_file = UPLOAD_FOLDER . basename($file["name"]);
-      $fileType = pathinfo($target_file,PATHINFO_EXTENSION);
+      $target_file = UPLOAD_FOLDER.'/'.basename($file["name"]);
+      $fileType = pathinfo($target_file, PATHINFO_EXTENSION);
+      $error = false;
+
       // Check if file already exists
       if (file_exists($target_file)) {
-          craft()->userSession->setNotice(Craft::t('Sorry, file already exists.'));
-          return false;
+          $error = 'Sorry, file already exists.';
       }
       // Check file size
-      if ($file["size"] > 500000) {
-          craft()->userSession->setNotice(Craft::t('Sorry, your file is too large.'));
-          return false;
+      if (!$error && $file["size"] > 500000) {
+          $error = 'Sorry, your file is too large.';
       }
       // Allow certain file formats
-      if($fileType != "zip") {
-          craft()->userSession->setNotice(Craft::t('Sorry, only ZIP files are allowed.'));
-          return false;
+      if (!$error && $fileType != "zip") {
+          $error = 'Sorry, only ZIP files are allowed.';
       }
       // Check if $uploadOk is set to 0 by an error
-      if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        $this->extract($target_file, $overwrite);
-      } else {
-        craft()->userSession->setNotice(Craft::t('Sorry, there was an error uploading your file.'));
-        return false;
+      if (!$error) {
+        if ($this->move_uploaded_file($file["tmp_name"], $target_file)) {
+          $error = $this->extract($target_file, $overwrite);
+        } else {
+          $error = 'Sorry, there was an error uploading your file.';
+        }
       }
 
-      unlink($target_file);
+      if (file_exists($target_file)) {
+        unlink($target_file);
+      }
+
+      return $error;
     }
 
+    /**
+     * @param string $file
+     */
     public function extract($file, $overwrite = false)
     {
       $date = new DateTime();
@@ -46,13 +54,15 @@ class PluginUploaderService extends BaseApplicationComponent
         $zip->extractTo(UPLOAD_FOLDER);
         $zip->close();
 
-        $this->move(pathinfo($file,PATHINFO_FILENAME), $overwrite);
+        return $this->move(pathinfo($file, PATHINFO_FILENAME), $overwrite);
       }
+
+      return 'Unknown Error';
     }
 
     public function move($folder, $overwrite = false)
     {
-      $zipFolder = UPLOAD_FOLDER.$folder;
+      $zipFolder = UPLOAD_FOLDER.'/'.$folder;
       $pluginExtractFile = '';
       $pluginExtractFolder = '';
       // Find the folder that the Plugin.php file is in. That is the root of the plugin.
@@ -83,30 +93,29 @@ class PluginUploaderService extends BaseApplicationComponent
         }
 
         // Copy to craft/plugins folder.
-        $pluginInstallFolder = CRAFT_PLUGIN_FOLDER . '/' . strtolower($pluginName);
+        $pluginInstallFolder = CRAFT_PLUGIN_FOLDER.'/'.strtolower($pluginName);
         if ($overwrite || !file_exists($pluginInstallFolder)) {
           // Copy folder to craft/plugins
           $this->recurse_copy($pluginExtractFolder, $pluginInstallFolder);
           // Remove zipped folder
           $this->rrmdir($zipFolder);
-
-          craft()->userSession->setNotice(Craft::t("The plugin ". $pluginName . " has been uploaded."));
         }
         else {
-          craft()->userSession->setNotice(Craft::t("A plugin with the same name (". $pluginName . ") is already uploaded."));
-          return false;
+          return "A plugin with the same name (".$pluginName.") is already uploaded.";
         }
 
-        return true;
-      } else {
-        craft()->userSession->setNotice(Craft::t("The uploaded file is not a valid plugin."));
         return false;
+      } else {
+        return "The uploaded file is not a valid plugin.";
       }
     }
 
-    function rrmdir($dir) {
-      foreach(glob($dir . '/{,.}[!.,!..]*',GLOB_MARK|GLOB_BRACE) as $file) {
-        if(is_dir($file)) {
+    /**
+     * @param string $dir
+     */
+    private function rrmdir($dir) {
+      foreach (glob($dir.'/{,.}[!.,!..]*', GLOB_MARK|GLOB_BRACE) as $file) {
+        if (is_dir($file)) {
           $this->rrmdir($file);
         } else {
           unlink($file);
@@ -115,7 +124,11 @@ class PluginUploaderService extends BaseApplicationComponent
       rmdir($dir);
     }
 
-    function recurse_copy($src,$dst)
+    /**
+     * @param string $src
+     * @param string $dst
+     */
+    private function recurse_copy($src,$dst)
     {
       $dir = opendir($src);
       @mkdir($dst);
@@ -123,12 +136,18 @@ class PluginUploaderService extends BaseApplicationComponent
           if (( $file != '.' ) && ( $file != '..' )) {
               if ( is_dir($src . '/' . $file) ) {
                   $this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
-              }
-              else {
+              } else {
                   copy($src . '/' . $file,$dst . '/' . $file);
               }
           }
       }
       closedir($dir);
-  }
+    }
+
+    /**
+     * @param string $to
+     */
+    protected function move_uploaded_file($from, $to) {
+        return move_uploaded_file($from, $to);
+    }
 }

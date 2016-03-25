@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="../../craft/app/tests/bootstrap.php" backupGlobals="false" backupStaticAttributes="false" colors="true" verbose="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnFailure="false">
+  <testsuites>
+    <testsuite name="Plugin Uploader Test Suite">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <filter>
+    <whitelist>
+      <directory suffix=".php">./services</directory>
+      <directory suffix=".php">./pluginuploader/services</directory>
+    </whitelist>
+  </filter>
+  <logging>
+    <log type="coverage-text" target="build/coverage.txt"/>
+    <log type="coverage-clover" target="build/logs/clover.xml"/>
+  </logging>
+</phpunit>

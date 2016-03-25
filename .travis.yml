@@ -1,0 +1,35 @@
+# see http://about.travis-ci.org/docs/user/languages/php/ for more hints
+language: php
+
+# list any PHP version you want to test against
+php:
+  # using major version aliases
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+
+# execute any number of scripts before the test run, custom env's are available as variables
+before_script:
+  - curl -sS https://codeload.github.com/pixelandtonic/Craft-Release/zip/master > craft.zip
+  - unzip craft.zip
+  - rm craft.zip
+  - mv Craft-Release-master craft
+  - mkdir craft/config
+  - echo "<?php return array('user' => 'test');" > craft/config/db.php
+  - mkdir craft/storage
+  - mkdir -p craft/plugins/pluginuploader
+  - for item in *; do if [[ ! "$item" == "craft" ]]; then mv $item craft/plugins; fi; done
+  - cd craft/app
+  - composer require mockery/mockery
+  - cd ../..
+
+# execute tests
+script: phpunit --configuration craft/plugins/phpunit.xml.dist --coverage-clover coverage.clover craft/plugins/pluginuploader/tests
+
+# upload coverage to scrutinizer
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
