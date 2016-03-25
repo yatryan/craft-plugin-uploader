@@ -22,5 +22,13 @@
       "Added force overwrite option to allow for upgrading plugins already uploaded.",
       "[Fixed] Styling to match that of Craft Admin."
     ]
+  },{
+    "version": "1.1",
+    "downloadUrl": "https://github.com/yatryan/craft-plugin-uploader/archive/1.1.zip",
+    "date": "2016-03-25T8:52:05-04:00",
+    "notes": [
+      "[Added] Unit Tests.",
+      "[Improved] Handling of Error messages."
+    ]
   }
 ]
