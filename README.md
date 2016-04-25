@@ -24,6 +24,9 @@ Plugin Uploader for [Craft](http://craftcms.com) makes it much easier to upload 
 
 ## Changelog
 
+### 1.1.3
+- [Improved] Increased Plugin max upload size to 5MB
+
 ### 1.1.2
 - [Fixed] Issue #2: Plugin not enabling
 
