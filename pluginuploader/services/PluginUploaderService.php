@@ -18,7 +18,7 @@ class PluginUploaderService extends BaseApplicationComponent
           $error = 'Sorry, file already exists.';
       }
       // Check file size
-      if (!$error && $file["size"] > 500000) {
+      if (!$error && $file["size"] > 5000000) {
           $error = 'Sorry, your file is too large.';
       }
       // Allow certain file formats
