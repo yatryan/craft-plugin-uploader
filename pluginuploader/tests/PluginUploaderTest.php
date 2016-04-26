@@ -98,7 +98,7 @@ class PluginUploaderTest extends BaseTest
    */
   public function testUploadFail_FileSize()
   {
-    $file = array("name"=>"zipSubfolder.zip", "size"=>5000000, "tmp_name"=>__DIR__.'/zipSubfolder.zip');
+    $file = array("name"=>"zipSubfolder.zip", "size"=>50000000000, "tmp_name"=>__DIR__.'/zipSubfolder.zip');
 
     $service = $this->setMockPluginUploaderServiceExtract();
     $result = $service->upload($file);
