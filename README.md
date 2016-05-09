@@ -21,8 +21,12 @@ Plugin Uploader for [Craft](http://craftcms.com) makes it much easier to upload 
 
 ## TODO
 - [ ] Research ability to automatically install uploaded plugins
+- [ ] Customize max upload size
 
 ## Changelog
+
+### 1.1.4
+- [Fixed] Issue #3: Missing CSRF
 
 ### 1.1.3
 - [Improved] Increased Plugin max upload size to 5MB
