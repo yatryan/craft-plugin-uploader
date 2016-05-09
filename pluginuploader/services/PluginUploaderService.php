@@ -1,15 +1,11 @@
 <?php
 namespace Craft;
 
-const CRAFT_FOLDER = __DIR__.'/../../..';
-const CRAFT_PLUGIN_FOLDER = CRAFT_FOLDER.'/plugins';
-const UPLOAD_FOLDER = CRAFT_FOLDER."/storage/uploads/pluginuploader";
-
 class PluginUploaderService extends BaseApplicationComponent
 {
     public function upload($file, $overwrite = false)
     {
-      $target_file = UPLOAD_FOLDER.'/'.basename($file["name"]);
+      $target_file = CRAFT_STORAGE_PATH.'uploads/pluginuploader/'.basename($file["name"]);
       $fileType = pathinfo($target_file, PATHINFO_EXTENSION);
       $error = false;
 
@@ -18,7 +14,7 @@ class PluginUploaderService extends BaseApplicationComponent
           $error = 'Sorry, file already exists.';
       }
       // Check file size
-      if (!$error && $file["size"] > 5000000) {
+      if (!$error && $file["size"] > 500000) {
           $error = 'Sorry, your file is too large.';
       }
       // Allow certain file formats
@@ -51,7 +47,7 @@ class PluginUploaderService extends BaseApplicationComponent
       $zip = new \ZipArchive();
       $res = $zip->open($file);
       if ($res === TRUE) {
-        $zip->extractTo(UPLOAD_FOLDER);
+        $zip->extractTo(CRAFT_STORAGE_PATH.'uploads/pluginuploader');
         $zip->close();
 
         return $this->move(pathinfo($file, PATHINFO_FILENAME), $overwrite);
@@ -62,7 +58,7 @@ class PluginUploaderService extends BaseApplicationComponent
 
     public function move($folder, $overwrite = false)
     {
-      $zipFolder = UPLOAD_FOLDER.'/'.$folder;
+      $zipFolder = CRAFT_STORAGE_PATH.'uploads/pluginuploader/'.$folder;
       $pluginExtractFile = '';
       $pluginExtractFolder = '';
       // Find the folder that the Plugin.php file is in. That is the root of the plugin.
@@ -93,7 +89,7 @@ class PluginUploaderService extends BaseApplicationComponent
         }
 
         // Copy to craft/plugins folder.
-        $pluginInstallFolder = CRAFT_PLUGIN_FOLDER.'/'.strtolower($pluginName);
+        $pluginInstallFolder = CRAFT_PLUGINS_PATH.strtolower($pluginName);
         if ($overwrite || !file_exists($pluginInstallFolder)) {
           // Copy folder to craft/plugins
           $this->recurse_copy($pluginExtractFolder, $pluginInstallFolder);
@@ -137,6 +133,9 @@ class PluginUploaderService extends BaseApplicationComponent
               if ( is_dir($src . '/' . $file) ) {
                   $this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
               } else {
+                  if (!file_exists($dst)) {
+                      mkdir($dst, 0755, true);
+                  }
                   copy($src . '/' . $file,$dst . '/' . $file);
               }
           }

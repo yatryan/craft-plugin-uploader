@@ -44,5 +44,12 @@
     "notes": [
       "[Improved] Increased Plugin max upload size to 5MB."
     ]
+  },{
+    "version": "1.1.4",
+    "downloadUrl": "https://github.com/yatryan/craft-plugin-uploader/archive/1.1.4.zip",
+    "date": "2016-05-09T16:00:00-04:00",
+    "notes": [
+      "[Fixed] Issue #3: Missing CSRF."
+    ]
   }
 ]
